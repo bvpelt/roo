@@ -29,18 +29,18 @@ databaseChangeLog:
             dropTable:
               - tableName: MYUSER
   - changeSet:
-      id:  200
-      author:  bart
+      id: 200
+      author: bart
       dbms: PostgreSQL
       comment: Create user identificatie index
       changes:
         - createIndex:
-            clustered:  true
+            clustered: true
             columns:
               - column:
-                  descending:  true
-                  name:  LASTNAME
-            indexName:  idx_lastname
-            schemaName:  public
-            tableName:  MYUSER
-            unique:  false
+                  descending: true
+                  name: LASTNAME
+            indexName: idx_lastname
+            schemaName: public
+            tableName: MYUSER
+            unique: false

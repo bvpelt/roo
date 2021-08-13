@@ -1,10 +1,12 @@
-package nl.bsoft.roo.storage;
+package nl.bsoft.roo.service;
+
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
 @SpringBootTest
-class StorageApplicationTests {
+class ServiceApplicationTests {
 
     @Test
     void contextLoads() {

@@ -23,3 +23,14 @@ roo=# grant all privileges on database ambtsdb to testuser;
 GRANT
 
 ```
+
+## Database commandline
+
+```sql
+$ psql -h localhost roo
+```
+
+# Liquibase
+See
+- https://github.com/PeterHenell/liquibase-multimodule-deploy, only deployment
+- https://github.com/cardil/liquibase-multimodule, include table definitions from different modules
