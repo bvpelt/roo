@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 100
+      author: bart
+      dbms: PostgreSQL
+      comment: Create user
+      changes:
+        - createTable:
+            schemaName: public
+            tableName: MYUSER
+            columns:
+              - column:
+                  name: ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: FIRSTNAME
+                  type: varchar(24)
+              - column:
+                  name: LASTNAME
+                  type: varchar(128)
+              - column:
+                  name: BIRTHDATE
+                  type: DATE
+        - rollback:
+            dropTable:
+              - tableName: MYUSER
+  - changeSet:
+      id:  200
+      author:  bart
+      dbms: PostgreSQL
+      comment: Create user identificatie index
+      changes:
+        - createIndex:
+            clustered:  true
+            columns:
+              - column:
+                  descending:  true
+                  name:  LASTNAME
+            indexName:  idx_lastname
+            schemaName:  public
+            tableName:  MYUSER
+            unique:  false
