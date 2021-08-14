@@ -14,9 +14,9 @@
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <name>parent</name>
     <description>Demo project for Spring Boot</description>
-
 
     <properties>
         <java.version>11</java.version>
@@ -102,10 +102,14 @@
 
     <build>
         <plugins>
+            <!--
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+-->
+
+
         </plugins>
     </build>
 
