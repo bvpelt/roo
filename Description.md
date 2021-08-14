@@ -34,3 +34,4 @@ $ psql -h localhost roo
 See
 - https://github.com/PeterHenell/liquibase-multimodule-deploy, only deployment
 - https://github.com/cardil/liquibase-multimodule, include table definitions from different modules
+- https://stackoverflow.com/questions/59681305/using-project-version-with-liquibase-in-a-multimodule-maven-project
