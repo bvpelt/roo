@@ -20,13 +20,16 @@
 
     <properties>
         <java.version>11</java.version>
+        <liquibase.version>4.4.3</liquibase.version>
+        <lombok.version>1.18.20</lombok.version>
+        <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
         <spring.boot.version>2.5.3</spring.boot.version>
     </properties>
 
     <modules>
         <module>model</module>
-        <module>service</module>
         <module>storage</module>
+        <module>service</module>
     </modules>
 
     <dependencyManagement>
@@ -75,17 +78,16 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.20</version>
+                <version>${lombok.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
-                <version>4.4.3</version>
+                <version>${liquibase.version}</version>
             </dependency>
 
             <!-- test -->
-
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
@@ -101,16 +103,49 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <!--
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
--->
+        <pluginManagement>
+            <plugins>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin}</version>
+                    <configuration>
+                        <verbose>false</verbose>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <!--
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+                -->
+            </plugins>
+        </pluginManagement>
 
-        </plugins>
     </build>
 
 </project>
