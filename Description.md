@@ -51,3 +51,6 @@ See
 - http://localhost:8080/v3/api-docs
 - http://localhost:8080/swagger-ui.html
 
+# Vulnerabilities
+See
+- https://itnext.io/owasp-dependency-check-maven-vulnerabilities-java-898a9cf99f5e?gi=3c707c72d4e0

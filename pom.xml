@@ -19,6 +19,8 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
+        <dependency-check-maven.version>6.2.2</dependency-check-maven.version>
+        <findbugs.version>3.0.5</findbugs.version>
         <java.version>11</java.version>
         <liquibase.version>4.4.3</liquibase.version>
         <lombok.version>1.18.20</lombok.version>
@@ -144,9 +146,47 @@
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.9.1</version>
                 </plugin>
+
+                <!--
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${dependency-check-maven.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                -->
             </plugins>
         </pluginManagement>
 
     </build>
 
+
+
+    <profiles>
+        <profile>
+            <id>owasp-dependency-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${dependency-check-maven.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
