@@ -27,7 +27,8 @@ GRANT
 ## Database commandline
 
 ```sql
-$ psql -h localhost roo
+$
+psql -h localhost roo
 ```
 
 # Liquibase
@@ -39,5 +40,7 @@ See
 - https://stackoverflow.com/questions/59681305/using-project-version-with-liquibase-in-a-multimodule-maven-project
 
 # Documentation
+
 See
+
 - https://maven.apache.org/plugins/maven-site-plugin/index.html
