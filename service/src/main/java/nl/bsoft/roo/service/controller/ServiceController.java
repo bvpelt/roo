@@ -12,6 +12,7 @@ import nl.bsoft.roo.model.bom.User;
 import nl.bsoft.roo.storage.model.UserDao;
 import nl.bsoft.roo.storage.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @NoArgsConstructor
@@ -46,6 +48,8 @@ public class ServiceController {
         List<UserDao> userDaos = null;
         userDaos = userRepository.findAll();
 
+        log.info("Found {} entries", userDaos.size());
+
         User[] users = new User[userDaos.size()];
         int userIndex = 0;
         for (UserDao userDao : userDaos) {
@@ -69,12 +73,75 @@ public class ServiceController {
     public ResponseEntity<User> addUser(final @RequestBody User user) {
         ResponseEntity<User> userResponse = null;
         UserDao userDao = convertUserToToUserDao(user);
-        UserDao savedUserDao = userRepository.save(userDao);
+        UserDao savedUserDao = null;
+
+        try {
+        savedUserDao = userRepository.save(userDao);
         User savedUser = convertUserDaoToUser(savedUserDao);
 
         userResponse = ResponseEntity.ok(savedUser);
 
         return userResponse;
+        } catch (Exception e) {
+            log.error("User not saved", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/users", method = RequestMethod.PUT)
+    @Operation(summary = "Update a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User is updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "401", description = "User not found",
+                    content = @Content)})
+
+    public ResponseEntity<User> updateUser(final @RequestBody User user) {
+        ResponseEntity<User> userResponse = null;
+        UserDao userDao = convertUserToToUserDao(user);
+        Optional<UserDao> savedUserDao = userRepository.findById(user.getId());
+        if (savedUserDao.isPresent()) {
+            UserDao updatedUser = updateFoundUser(savedUserDao.get(), user);
+            User savedUser = convertUserDaoToUser(updatedUser);
+
+            userResponse = ResponseEntity.ok(savedUser);
+
+            return userResponse;
+        } else {
+            log.error("User with id {} not found", user.getId());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(value = "/users", method = RequestMethod.DELETE)
+    @Operation(summary = "Delete a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User is deleted",
+                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "User not found",
+                    content = @Content)})
+
+    public ResponseEntity<User> deleteUser(final @RequestBody User user) {
+        ResponseEntity<User> userResponse = null;
+        UserDao userDao = convertUserToToUserDao(user);
+
+        try {
+            userRepository.deleteById(user.getId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("User not deleted", e);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private UserDao updateFoundUser(final UserDao userDao, final User user) {
+        if ((userDao != null) && (user != null)) {
+            userDao.setFirstName(user.getFirstName());
+            userDao.setLastName(user.getLastName());
+            userDao.setBirthDate(user.getBirthDate());
+        }
+        return userDao;
     }
 
     private User convertUserDaoToUser(final UserDao userDao) {
