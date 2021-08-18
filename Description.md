@@ -44,3 +44,10 @@ See
 See
 
 - https://maven.apache.org/plugins/maven-site-plugin/index.html
+
+# API
+See
+- https://stackoverflow.com/questions/55938207/how-to-generate-openapi-3-0-spec-from-existing-spring-boot-app
+- http://localhost:8080/v3/api-docs
+- http://localhost:8080/swagger-ui.html
+
