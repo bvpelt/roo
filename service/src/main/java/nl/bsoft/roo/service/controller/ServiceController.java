@@ -1,11 +1,15 @@
 package nl.bsoft.roo.service.controller;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.bsoft.roo.model.bom.User;
@@ -25,6 +29,19 @@ import java.util.Optional;
 @RestController
 @NoArgsConstructor
 @Slf4j
+@OpenAPIDefinition(
+        info = @Info(
+                version = "1.0",
+                description = "The ServiceController enables user operations",
+                title = "User api",
+                license = @License(
+                        url = "https://opensource.org/licenses/MIT",
+                        name = "MIT"
+                )
+        ),
+        tags = {
+                @Tag(name = "Users")
+        })
 public class ServiceController {
 
     private UserRepository userRepository;
@@ -35,7 +52,7 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    @Operation(summary = "Get all known users")
+    @Operation(summary = "Get all known users", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found users",
                     content = {@Content(mediaType = "application/json",
@@ -55,6 +72,7 @@ public class ServiceController {
         for (UserDao userDao : userDaos) {
             User user = convertUserDaoToUser(userDao);
             users[userIndex] = user;
+            userIndex++;
         }
 
         result = ResponseEntity.ok(users);
@@ -63,7 +81,7 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
-    @Operation(summary = "Register new user")
+    @Operation(summary = "Register new user", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "New user is registered",
                     content = {@Content(mediaType = "application/json",
@@ -76,12 +94,12 @@ public class ServiceController {
         UserDao savedUserDao = null;
 
         try {
-        savedUserDao = userRepository.save(userDao);
-        User savedUser = convertUserDaoToUser(savedUserDao);
+            savedUserDao = userRepository.save(userDao);
+            User savedUser = convertUserDaoToUser(savedUserDao);
 
-        userResponse = ResponseEntity.ok(savedUser);
+            userResponse = ResponseEntity.ok(savedUser);
 
-        return userResponse;
+            return userResponse;
         } catch (Exception e) {
             log.error("User not saved", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -89,17 +107,16 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
-    @Operation(summary = "Update a user")
+    @Operation(summary = "Update a user", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User is updated",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = User.class))}),
             @ApiResponse(responseCode = "401", description = "User not found",
                     content = @Content)})
-
     public ResponseEntity<User> updateUser(final @RequestBody User user) {
         ResponseEntity<User> userResponse = null;
-        UserDao userDao = convertUserToToUserDao(user);
+
         Optional<UserDao> savedUserDao = userRepository.findById(user.getId());
         if (savedUserDao.isPresent()) {
             UserDao updatedUser = updateFoundUser(savedUserDao.get(), user);
@@ -115,16 +132,13 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.DELETE)
-    @Operation(summary = "Delete a user")
+    @Operation(summary = "Delete a user", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User is deleted",
                     content = @Content),
             @ApiResponse(responseCode = "401", description = "User not found",
                     content = @Content)})
-
     public ResponseEntity<User> deleteUser(final @RequestBody User user) {
-        ResponseEntity<User> userResponse = null;
-        UserDao userDao = convertUserToToUserDao(user);
 
         try {
             userRepository.deleteById(user.getId());
