@@ -54,3 +54,9 @@ See
 # Vulnerabilities
 See
 - https://itnext.io/owasp-dependency-check-maven-vulnerabilities-java-898a9cf99f5e?gi=3c707c72d4e0
+
+# Jar content
+```bash
+$ jar tvf service/target/service-application-0.0.1-SNAPSHOT.jar | awk '{ printf("%d\t%s\n", $1, $8); }'
+$ jar tvf service/target/service-application-0.0.1-SNAPSHOT.jar | awk '{ print $8 }' | sort -u    
+```
