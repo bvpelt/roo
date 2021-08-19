@@ -92,16 +92,23 @@ public class ServiceController {
         ResponseEntity<User> userResponse = null;
         UserDao userDao = convertUserToToUserDao(user);
         UserDao savedUserDao = null;
+        Optional<UserDao> optionalUserDao = null;
 
         try {
-            savedUserDao = userRepository.save(userDao);
-            User savedUser = convertUserDaoToUser(savedUserDao);
+            optionalUserDao = userRepository.findById(user.getId());
+            if (!optionalUserDao.isPresent()) {
+                savedUserDao = userRepository.save(userDao);
+                User savedUser = convertUserDaoToUser(savedUserDao);
 
-            userResponse = ResponseEntity.ok(savedUser);
+                userResponse = ResponseEntity.ok(savedUser);
 
-            return userResponse;
+                return userResponse;
+            } else {
+                log.error("User with id: {} already existed", user.getId());
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
-            log.error("User not saved", e);
+            log.error("User not saved: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -144,7 +151,7 @@ public class ServiceController {
             userRepository.deleteById(user.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            log.error("User not deleted", e);
+            log.error("User not deleted: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -169,6 +176,7 @@ public class ServiceController {
 
     private UserDao convertUserToToUserDao(final User user) {
         UserDao userDao = new UserDao();
+        userDao.setId(user.getId());
         userDao.setFirstName(user.getFirstName());
         userDao.setLastName(user.getLastName());
         userDao.setBirthDate(user.getBirthDate());
