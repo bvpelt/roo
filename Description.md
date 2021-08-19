@@ -26,9 +26,8 @@ GRANT
 
 ## Database commandline
 
-```sql
-$
-psql -h localhost roo
+```bash
+$ psql -h localhost roo
 ```
 
 # Liquibase
