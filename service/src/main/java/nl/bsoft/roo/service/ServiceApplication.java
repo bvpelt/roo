@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
-@SpringBootApplication(scanBasePackages = { "nl.bsoft"})
+@SpringBootApplication(scanBasePackages = {"nl.bsoft"})
 @PropertySource(value = "classpath:server.properties")
 public class ServiceApplication {
 

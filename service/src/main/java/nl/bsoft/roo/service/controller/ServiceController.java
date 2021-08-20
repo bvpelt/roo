@@ -18,10 +18,7 @@ import nl.bsoft.roo.storage.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -80,6 +77,30 @@ public class ServiceController {
         return result;
     }
 
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+    @Operation(summary = "Get a users by id", tags = {"Users"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found users",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "404", description = "No user found",
+                    content = @Content)})
+    public ResponseEntity<User> getUser(final @PathVariable Long id) {
+        ResponseEntity<User> result;
+
+        Optional<UserDao> userDao;
+        userDao = userRepository.findById(id);
+
+        if (userDao.isPresent()) {
+            User user = convertUserDaoToUser(userDao.get());
+            result = ResponseEntity.ok(user);
+            return result;
+        } else {
+            log.error("User with id {} not found", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     @Operation(summary = "Register new user", tags = {"Users"})
     @ApiResponses(value = {
@@ -98,7 +119,7 @@ public class ServiceController {
             // If user has id, check if user already known
             boolean userExists = false;
 
-            if ((user != null) && (user.getId() != null)) {
+            if (user.getId() != null) {
                 optionalUserDao = userRepository.findById(user.getId());
                 if (optionalUserDao.isPresent()) {
                     userExists = true;
@@ -113,11 +134,7 @@ public class ServiceController {
 
                 return userResponse;
             } else {
-                if (user == null) {
-                    log.error("No user specified");
-                } else {
-                    log.error("User with id: {} already existed", user.getId());
-                }
+                log.error("User with id: {} already existed", user.getId());
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
@@ -151,20 +168,28 @@ public class ServiceController {
         }
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
     @Operation(summary = "Delete a user", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User is deleted",
                     content = @Content),
             @ApiResponse(responseCode = "401", description = "User not found",
                     content = @Content)})
-    public ResponseEntity<User> deleteUser(final @RequestBody User user) {
+    public ResponseEntity<User> deleteUser(final @PathVariable Long id) {
 
-        try {
-            userRepository.deleteById(user.getId());
+        Optional<UserDao> optionalUserDao;
+        boolean userExists = false;
+
+        optionalUserDao = userRepository.findById(id);
+        if (optionalUserDao.isPresent()) {
+            userExists = true;
+        }
+
+        if (userExists) {
+            userRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("User not deleted: " + e.getMessage());
+        } else {
+            log.error("User with id {} doesnot exist ", id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
