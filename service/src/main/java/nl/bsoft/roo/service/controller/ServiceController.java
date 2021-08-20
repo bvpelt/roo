@@ -60,9 +60,9 @@ public class ServiceController {
             @ApiResponse(responseCode = "404", description = "No users found",
                     content = @Content)})
     public ResponseEntity<User[]> getUsers() {
-        ResponseEntity<User[]> result = null;
+        ResponseEntity<User[]> result;
 
-        List<UserDao> userDaos = null;
+        List<UserDao> userDaos;
         userDaos = userRepository.findAll();
 
         log.info("Found {} entries", userDaos.size());
@@ -89,22 +89,35 @@ public class ServiceController {
             @ApiResponse(responseCode = "400", description = "Bad parameters",
                     content = @Content)})
     public ResponseEntity<User> addUser(final @RequestBody User user) {
-        ResponseEntity<User> userResponse = null;
+        ResponseEntity<User> userResponse;
         UserDao userDao = convertUserToToUserDao(user);
-        UserDao savedUserDao = null;
-        Optional<UserDao> optionalUserDao = null;
+        UserDao savedUserDao;
+        Optional<UserDao> optionalUserDao;
 
         try {
-            optionalUserDao = userRepository.findById(user.getId());
-            if (!optionalUserDao.isPresent()) {
+            // If user has id, check if user already known
+            boolean userExists = false;
+
+            if ((user != null) && (user.getId() != null)) {
+                optionalUserDao = userRepository.findById(user.getId());
+                if (optionalUserDao.isPresent()) {
+                    userExists = true;
+                }
+            }
+            if (!userExists) {
                 savedUserDao = userRepository.save(userDao);
                 User savedUser = convertUserDaoToUser(savedUserDao);
 
                 userResponse = ResponseEntity.ok(savedUser);
+                log.debug("User with id: {} saved", savedUserDao.getId());
 
                 return userResponse;
             } else {
-                log.error("User with id: {} already existed", user.getId());
+                if (user == null) {
+                    log.error("No user specified");
+                } else {
+                    log.error("User with id: {} already existed", user.getId());
+                }
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
@@ -122,7 +135,7 @@ public class ServiceController {
             @ApiResponse(responseCode = "401", description = "User not found",
                     content = @Content)})
     public ResponseEntity<User> updateUser(final @RequestBody User user) {
-        ResponseEntity<User> userResponse = null;
+        ResponseEntity<User> userResponse;
 
         Optional<UserDao> savedUserDao = userRepository.findById(user.getId());
         if (savedUserDao.isPresent()) {
