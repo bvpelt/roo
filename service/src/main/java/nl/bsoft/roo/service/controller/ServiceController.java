@@ -143,7 +143,7 @@ public class ServiceController {
         }
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.PUT)
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
     @Operation(summary = "Update a user", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User is updated",
@@ -151,17 +151,26 @@ public class ServiceController {
                             schema = @Schema(implementation = User.class))}),
             @ApiResponse(responseCode = "401", description = "User not found",
                     content = @Content)})
-    public ResponseEntity<User> updateUser(final @RequestBody User user) {
+    public ResponseEntity<User> updateUser(final @RequestBody User user, final @PathVariable Long id) {
         ResponseEntity<User> userResponse;
 
-        Optional<UserDao> savedUserDao = userRepository.findById(user.getId());
+        Optional<UserDao> savedUserDao = userRepository.findById(id);
         if (savedUserDao.isPresent()) {
-            UserDao updatedUser = updateFoundUser(savedUserDao.get(), user);
-            User savedUser = convertUserDaoToUser(updatedUser);
+            if ((user.getId() == null) || ((user.getId() != null) && (id == user.getId()))) {
+                UserDao updatedUser = updateFoundUser(savedUserDao.get(), user);
+                User savedUser = convertUserDaoToUser(updatedUser);
+                updatedUser = convertUserToToUserDao(savedUser);
 
-            userResponse = ResponseEntity.ok(savedUser);
+                UserDao userDao = userRepository.save(updatedUser);
+                savedUser = convertUserDaoToUser(userDao);
 
-            return userResponse;
+                userResponse = ResponseEntity.ok(savedUser);
+
+                return userResponse;
+            } else {
+                log.error("User id {} does not match parameter id {}}", user.getId(), id);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         } else {
             log.error("User with id {} not found", user.getId());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -59,3 +59,6 @@ See
 $ jar tvf service/target/service-application-0.0.1-SNAPSHOT.jar | awk '{ printf("%d\t%s\n", $1, $8); }'
 $ jar tvf service/target/service-application-0.0.1-SNAPSHOT.jar | awk '{ print $8 }' | sort -u    
 ```
+
+# Rest
+- see https://spring.io/guides/tutorials/rest/
