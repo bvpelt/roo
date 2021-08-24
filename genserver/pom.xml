@@ -10,9 +10,9 @@
 
     <groupId>io.swagger</groupId>
     <artifactId>swagger-spring</artifactId>
-    <packaging>jar</packaging>
-    <name>swagger-spring</name>
 
+    <name>swagger-spring</name>
+    <description>Demo using generated swagger api spec</description>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -26,21 +26,27 @@
             <groupId>nl.bsoft.roo</groupId>
             <artifactId>model</artifactId>
         </dependency>
-
+-->
         <dependency>
             <groupId>nl.bsoft.roo</groupId>
             <artifactId>storage</artifactId>
         </dependency>
--->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
-
+-->
         <!--SpringFox dependencies -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -71,11 +77,13 @@
             <artifactId>validation-api</artifactId>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>org.springframework.plugin</groupId>
             <artifactId>spring-plugin-core</artifactId>
             <version>2.0.0.RELEASE</version>
         </dependency>
+-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -114,8 +122,10 @@
                 <configuration>
                     <archive>
                         <manifest>
+                            <addDefaultEntries>true</addDefaultEntries>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addBuildEnvironmentEntries>true</addBuildEnvironmentEntries>
                             <mainClass>io.swagger.Swagger2SpringBoot</mainClass>
                         </manifest>
                     </archive>
