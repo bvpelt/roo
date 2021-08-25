@@ -13,3 +13,5 @@ buildNumber.properties
 .project
 .settings
 *.iml
+.swagger-codegen-ignore
+.swagger-codegen
