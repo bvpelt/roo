@@ -1,9 +1,18 @@
 package nl.bsoft.roo.service.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.bsoft.roo.service.api.UsersApi;
@@ -13,9 +22,7 @@ import nl.bsoft.roo.storage.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -26,6 +33,19 @@ import java.util.Optional;
 @RestController
 @NoArgsConstructor
 @Slf4j
+@OpenAPIDefinition(
+        info = @Info(
+                version = "1.0",
+                description = "The ServiceController enables user operations",
+                title = "User api",
+                license = @License(
+                        url = "https://opensource.org/licenses/MIT",
+                        name = "MIT"
+                )
+        ),
+        tags = {
+                @Tag(name = "Users")
+        })
 public class ServiceController implements UsersApi {
 
     private UserRepository userRepository;
@@ -41,6 +61,16 @@ public class ServiceController implements UsersApi {
         this.userRepository = userRepository;
     }
 
+    @RequestMapping(value = "/users", method = RequestMethod.POST)
+    @Operation(summary = "Register new user", tags = {"Users"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "New user is registered",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad parameters",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Server Error",
+                    content = @Content)})
     public ResponseEntity<User> addUser(@Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody User user) {
         ResponseEntity<User> userResponse;
         UserDao userDao = convertUserToToUserDao(user);
@@ -81,6 +111,13 @@ public class ServiceController implements UsersApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
+    @Operation(summary = "Delete a user", tags = {"Users"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User is deleted",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)})
     public ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id) {
 
         Optional<UserDao> optionalUserDao;
@@ -100,6 +137,16 @@ public class ServiceController implements UsersApi {
         }
     }
 
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+    @Operation(summary = "Get a users by id", tags = {"Users"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found users",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "404", description = "No user found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Server Error",
+                    content = @Content)})
     public ResponseEntity<User> getUser(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id) {
         ResponseEntity<User> result;
 
@@ -120,6 +167,17 @@ public class ServiceController implements UsersApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @Operation(summary = "Get all known users", tags = {"Users"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found users",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = User.class)))}),
+            @ApiResponse(responseCode = "404", description = "No users found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Server Error",
+                    content = @Content)})
     public ResponseEntity<List<User>> getUsers() {
         ResponseEntity<List<User>> result;
 
@@ -141,10 +199,23 @@ public class ServiceController implements UsersApi {
 
             return result;
         }
+        log.error("Accept header not valid, value: {}", accept);
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
 
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
+    @Operation(summary = "Update a user", tags = {"Users"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User is updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad request",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Server Error",
+                    content = @Content)})
     public ResponseEntity<User> updateUser(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id, @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody User user) {
         ResponseEntity<User> userResponse;
         String accept = request.getHeader("Accept");

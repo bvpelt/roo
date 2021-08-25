@@ -45,23 +45,30 @@ See
 - https://maven.apache.org/plugins/maven-site-plugin/index.html
 
 # API
+
 See
+
 - https://stackoverflow.com/questions/55938207/how-to-generate-openapi-3-0-spec-from-existing-spring-boot-app
 - http://localhost:8080/v3/api-docs
 - http://localhost:8080/swagger-ui.html
 
 # Vulnerabilities
+
 See
+
 - https://itnext.io/owasp-dependency-check-maven-vulnerabilities-java-898a9cf99f5e?gi=3c707c72d4e0
 
 # Jar content
+
 ```bash
 $ jar tvf service/target/service-application-0.0.1-SNAPSHOT.jar | awk '{ printf("%d\t%s\n", $1, $8); }'
 $ jar tvf service/target/service-application-0.0.1-SNAPSHOT.jar | awk '{ print $8 }' | sort -u    
 ```
 
 # Rest
+
 - see https://spring.io/guides/tutorials/rest/
 
 # Date
+
 - see https://www.javacodemonk.com/java-8-date-time-json-formatting-with-jackson-5fe5ff13
