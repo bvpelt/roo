@@ -1,29 +1,24 @@
 package nl.bsoft.roo.service.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.api.UsersApi;
-import io.swagger.model.User;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nl.bsoft.roo.service.api.UsersApi;
+import nl.bsoft.roo.service.api.model.User;
 import nl.bsoft.roo.storage.model.UserDao;
 import nl.bsoft.roo.storage.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,22 +26,6 @@ import java.util.Optional;
 @RestController
 @NoArgsConstructor
 @Slf4j
-/*
-@OpenAPIDefinition(
-        info = @Info(
-                version = "1.0",
-                description = "The ServiceController enables user operations",
-                title = "User api",
-                license = @License(
-                        url = "https://opensource.org/licenses/MIT",
-                        name = "MIT"
-                )
-        ),
-        tags = {
-                @Tag(name = "Users")
-        })
-
- */
 public class ServiceController implements UsersApi {
 
     private UserRepository userRepository;
@@ -55,63 +34,12 @@ public class ServiceController implements UsersApi {
 
     private HttpServletRequest request;
 
-    /*
-        @org.springframework.beans.factory.annotation.Autowired
-        public UsersApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-            this.objectMapper = objectMapper;
-            this.request = request;
-        }
-     */
     @Autowired
     public ServiceController(ObjectMapper objectMapper, HttpServletRequest request, final UserRepository userRepository) {
         this.objectMapper = objectMapper;
         this.request = request;
         this.userRepository = userRepository;
     }
-/*
-    @RequestMapping(value = "/users", method = RequestMethod.POST)
-    @Operation(summary = "Register new user", tags = {"Users"})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "New user is registered",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class))}),
-            @ApiResponse(responseCode = "400", description = "Bad parameters",
-                    content = @Content)})
-    public ResponseEntity<User> addUser(final @RequestBody User user) {
-        ResponseEntity<User> userResponse;
-        UserDao userDao = convertUserToToUserDao(user);
-        UserDao savedUserDao;
-        Optional<UserDao> optionalUserDao;
-
-        try {
-            // If user has id, check if user already known
-            boolean userExists = false;
-
-            if (user.getId() != null) {
-                optionalUserDao = userRepository.findById(user.getId());
-                if (optionalUserDao.isPresent()) {
-                    userExists = true;
-                }
-            }
-            if (!userExists) {
-                savedUserDao = userRepository.save(userDao);
-                User savedUser = convertUserDaoToUser(savedUserDao);
-
-                userResponse = ResponseEntity.ok(savedUser);
-                log.debug("User with id: {} saved", savedUserDao.getId());
-
-                return userResponse;
-            } else {
-                log.error("User with id: {} already existed", user.getId());
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            log.error("User not saved: " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
- */
 
     public ResponseEntity<User> addUser(@Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody User user) {
         ResponseEntity<User> userResponse;
@@ -150,7 +78,7 @@ public class ServiceController implements UsersApi {
 
         }
 
-        return new ResponseEntity<User>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     public ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id) {
@@ -189,7 +117,7 @@ public class ServiceController implements UsersApi {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         }
-        return new ResponseEntity<User>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     public ResponseEntity<List<User>> getUsers() {
@@ -202,24 +130,22 @@ public class ServiceController implements UsersApi {
 
             log.info("Found {} entries", userDaos.size());
 
-            List<User> users = new ArrayList<User>();
-            int userIndex = 0;
+            List<User> users = new ArrayList<>();
+
             for (UserDao userDao : userDaos) {
                 User user = convertUserDaoToUser(userDao);
                 users.add(user);
-                userIndex++;
             }
 
             result = ResponseEntity.ok(users);
 
             return result;
         }
-        return new ResponseEntity<List<User>>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
 
-
-    public ResponseEntity<User> updateUser(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") Long id,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id, @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody User user) {
         ResponseEntity<User> userResponse;
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -247,17 +173,14 @@ public class ServiceController implements UsersApi {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         }
-        return new ResponseEntity<User>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     private UserDao updateFoundUser(final UserDao userDao, final User user) {
         if ((userDao != null) && (user != null)) {
             userDao.setFirstName(user.getFirstName());
             userDao.setLastName(user.getLastName());
-            org.threeten.bp.LocalDate bd = user.getBirthDate();
-            LocalDate date = LocalDate.of(bd.getYear(), bd.getMonth().getValue(), bd.getDayOfMonth());
-            userDao.setBirthDate(date);
+            userDao.setBirthDate(user.getBirthDate());
         }
         return userDao;
     }
@@ -267,8 +190,7 @@ public class ServiceController implements UsersApi {
         user.setId(userDao.getId());
         user.setFirstName(userDao.getFirstName());
         user.setLastName(userDao.getLastName());
-        org.threeten.bp.LocalDate bd = org.threeten.bp.LocalDate.of(userDao.getBirthDate().getYear(), userDao.getBirthDate().getMonth().getValue(), userDao.getBirthDate().getDayOfMonth());
-        user.setBirthDate(bd);
+        user.setBirthDate(userDao.getBirthDate());
         return user;
     }
 
@@ -277,9 +199,7 @@ public class ServiceController implements UsersApi {
         userDao.setId(user.getId());
         userDao.setFirstName(user.getFirstName());
         userDao.setLastName(user.getLastName());
-        org.threeten.bp.LocalDate bd = user.getBirthDate();
-        LocalDate date = LocalDate.of(bd.getYear(), bd.getMonth().getValue(), bd.getDayOfMonth());
-        userDao.setBirthDate(date);
+        userDao.setBirthDate(user.getBirthDate());
         return userDao;
     }
 }

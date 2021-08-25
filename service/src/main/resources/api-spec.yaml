@@ -1,12 +1,12 @@
 openapi: 3.0.1
 
 info:
-  title: OpenAPI definition
-  version: v0.2
-  description: Open api specification for the user api
+  title: 'User OpenAPI definition'
+  version: 'v0.2'
+  description: 'Open api specification for the user api'
   license:
-    name: MIT
-    url: https://opensource.org/licenses/MIT
+    name: 'MIT'
+    url: 'https://opensource.org/licenses/MIT'
 
 tags:
   - Users
