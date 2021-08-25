@@ -6,10 +6,14 @@
         <groupId>nl.bsoft.roo</groupId>
         <artifactId>parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+
     </parent>
 
     <groupId>io.swagger</groupId>
     <artifactId>swagger-spring</artifactId>
+    <!--
+    <version>0.0.1-SNAPSHOT</version>
+-->
 
     <name>swagger-spring</name>
     <description>Demo using generated swagger api spec</description>
@@ -26,11 +30,12 @@
             <groupId>nl.bsoft.roo</groupId>
             <artifactId>model</artifactId>
         </dependency>
--->
+
         <dependency>
             <groupId>nl.bsoft.roo</groupId>
             <artifactId>storage</artifactId>
         </dependency>
+        -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -93,6 +98,7 @@
     </dependencies>
 
     <build>
+        <!--
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
@@ -132,5 +138,6 @@
                 </configuration>
             </plugin>
         </plugins>
+        -->
     </build>
 </project>

@@ -62,3 +62,6 @@ $ jar tvf service/target/service-application-0.0.1-SNAPSHOT.jar | awk '{ print $
 
 # Rest
 - see https://spring.io/guides/tutorials/rest/
+
+# Date
+- see https://www.javacodemonk.com/java-8-date-time-json-formatting-with-jackson-5fe5ff13
