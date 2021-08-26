@@ -15,12 +15,24 @@
     <name>service</name>
     <description>Demo project for Spring Boot</description>
 
+    <properties>
+        <asciidoctor-maven-plugin.version>1.5.8</asciidoctor-maven-plugin.version>
+        <jackson-databind-nullable.version>0.2.1</jackson-databind-nullable.version>
+        <openapi-generator-maven-plugin.version>5.2.1</openapi-generator-maven-plugin.version>
+        <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version>
+        <springfox-swagger2.version>3.0.0</springfox-swagger2.version>
+        <swagger-annotations.version>2.1.6</swagger-annotations.version>
+        <swagger-inflector.version>2.0.6</swagger-inflector.version>
+
+
+    </properties>
+
     <dependencies>
 
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>3.0.0</version>
+            <version>${springfox-swagger2.version}</version>
 
             <exclusions>
                 <exclusion>
@@ -34,35 +46,35 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-inflector</artifactId>
-            <version>2.0.6</version>
+            <version>${swagger-inflector.version}</version>
             <exclusions>
 
-                                <exclusion>
-                                    <groupId>com.fasterxml.jackson.datatype</groupId>
-                                    <artifactId>jackson-datatype-joda</artifactId>
-                                </exclusion>
-                                <exclusion>
-                                    <groupId>joda-time</groupId>
-                                    <artifactId>joda-time</artifactId>
-                                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.datatype</groupId>
+                    <artifactId>jackson-datatype-joda</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                </exclusion>
 
-                                <exclusion>
-                                    <groupId>ch.qos.logback</groupId>
-                                    <artifactId>logback-classic</artifactId>
-                                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>2.1.6</version>
+            <version>${swagger-annotations.version}</version>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
+            <version>${servlet-api.version}</version>
         </dependency>
 
         <dependency>
@@ -73,7 +85,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.1</version>
+            <version>${jackson-databind-nullable.version}</version>
         </dependency>
 
         <dependency>
@@ -84,7 +96,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.5.10</version>
+            <version>${springdoc-openapi-ui.version}</version>
         </dependency>
 
         <dependency>
@@ -122,17 +134,16 @@
             <scope>test</scope>
         </dependency>
 
-        <!--
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.12.4</version>
-        </dependency>
--->
-
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+
+
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -151,7 +162,7 @@
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.8</version>
+                <version>${asciidoctor-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>generate-docs</id>
@@ -177,7 +188,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.2.1</version>
+                <version>${openapi-generator-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>spring-boot-api</id>
