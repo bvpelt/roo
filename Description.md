@@ -72,3 +72,12 @@ $ jar tvf service/target/service-application-0.0.1-SNAPSHOT.jar | awk '{ print $
 # Date
 
 - see https://www.javacodemonk.com/java-8-date-time-json-formatting-with-jackson-5fe5ff13
+
+# Vulnerabilities
+
+- see https://www.geekyhacker.com/2020/01/08/how-to-configure-maven-owasp-dependency-check-plugin/
+
+In current project execute by:
+```bash
+$ mvn -P owasp-dependency-check org.owasp:dependency-check-maven:check
+```
