@@ -20,13 +20,16 @@
 
     <properties>
         <dependency-check-maven.version>6.2.2</dependency-check-maven.version>
-        <findbugs.version>3.0.5</findbugs.version>
+        <!-- <findbugs.version>3.0.5</findbugs.version> -->
         <java.version>11</java.version>
         <liquibase.version>4.4.3</liquibase.version>
         <lombok.version>1.18.20</lombok.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
+        <maven-project-info-reports-plugin.version>3.1.2</maven-project-info-reports-plugin.version>
         <maven-project-info-reports-plugin.version>3.1.2</maven-project-info-reports-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
         <spring.boot.version>2.5.3</spring.boot.version>
     </properties>
 
@@ -108,6 +111,11 @@
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>${maven-project-info-reports-plugin.version}</version>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
         </plugins>
     </reporting>
 
@@ -123,6 +131,17 @@
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer-plugin.version}</version>
+                    <configuration>
+                        <rules>
+                            <dependencyConvergence/>
+                        </rules>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${maven-jar-plugin.version}</version>
                 </plugin>
@@ -130,10 +149,23 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.9.1</version>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${maven-project-info-reports-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+        </plugins>
 
     </build>
 

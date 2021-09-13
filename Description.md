@@ -52,12 +52,6 @@ See
 - http://localhost:8080/v3/api-docs
 - http://localhost:8080/swagger-ui.html
 
-# Vulnerabilities
-
-See
-
-- https://itnext.io/owasp-dependency-check-maven-vulnerabilities-java-898a9cf99f5e?gi=3c707c72d4e0
-
 # Jar content
 
 ```bash
@@ -75,10 +69,31 @@ $ jar tvf service/target/service-application-0.0.1-SNAPSHOT.jar | awk '{ print $
 
 # Vulnerabilities
 
-- see https://www.geekyhacker.com/2020/01/08/how-to-configure-maven-owasp-dependency-check-plugin/
+See
+
+- https://itnext.io/owasp-dependency-check-maven-vulnerabilities-java-898a9cf99f5e?gi=3c707c72d4e0
+- https://www.geekyhacker.com/2020/01/08/how-to-configure-maven-owasp-dependency-check-plugin/
 
 In current project execute by:
 
 ```bash
 $ mvn -P owasp-dependency-check org.owasp:dependency-check-maven:check
+```
+
+# Maven
+
+See
+
+- https://dzone.com/articles/solving-dependency-conflicts-in-maven for resolving maven dependencie checks
+
+proces for updating
+```bash
+# Step 1
+# Determine state using
+$ mvn enforcer:enforce
+
+# Step 2
+# If any warnings exclude specific libraries and where needed declare correct version in top of pom.xml so it will be read first
+# Rerun step 1 until no more warnings
+
 ```
