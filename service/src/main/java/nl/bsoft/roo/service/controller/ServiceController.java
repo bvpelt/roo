@@ -61,7 +61,7 @@ public class ServiceController implements UsersApi {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.POST)
+    @RequestMapping(value = "/ousers", method = RequestMethod.POST)
     @Operation(summary = "Register new user", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "New user is registered",
@@ -111,7 +111,7 @@ public class ServiceController implements UsersApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/ousers/{id}", method = RequestMethod.DELETE)
     @Operation(summary = "Delete a user", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User is deleted",
@@ -137,7 +137,7 @@ public class ServiceController implements UsersApi {
         }
     }
 
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/ousers/{id}", method = RequestMethod.GET)
     @Operation(summary = "Get a users by id", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found users",
@@ -168,7 +168,7 @@ public class ServiceController implements UsersApi {
     }
 
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @RequestMapping(value = "/ousers", method = RequestMethod.GET)
     @Operation(summary = "Get all known users", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found users",
@@ -181,12 +181,12 @@ public class ServiceController implements UsersApi {
     public ResponseEntity<List<User>> getUsers() {
         ResponseEntity<List<User>> result;
 
-        List<UserDao> userDaos;
+        Iterable<UserDao> userDaos;
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             userDaos = userRepository.findAll();
 
-            log.info("Found {} entries", userDaos.size());
+            //log.info("Found {} entries", userDaos.size());
 
             List<User> users = new ArrayList<>();
 
@@ -204,7 +204,7 @@ public class ServiceController implements UsersApi {
 
     }
 
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/ousers/{id}", method = RequestMethod.PUT)
     @Operation(summary = "Update a user", tags = {"Users"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User is updated",
