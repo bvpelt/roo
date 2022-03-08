@@ -22,7 +22,7 @@
         <dependency-check-maven.version>6.2.2</dependency-check-maven.version>
         <!-- <findbugs.version>3.0.5</findbugs.version> -->
         <java.version>11</java.version>
-        <liquibase.version>4.4.3</liquibase.version>
+        <liquibase.version>4.8.0</liquibase.version>
         <lombok.version>1.18.20</lombok.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
